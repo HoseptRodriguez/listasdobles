@@ -1,22 +1,23 @@
-package listadoblenumeros4;
+package listadoblenumeros;
 
 public class ListaDobleNumeros {
-
+    
     // Clase interna Nodo
     static class Nodo {
-        int valor;
+        int dato;
         Nodo anterior;
         Nodo siguiente;
 
-        Nodo(int valor) {
-            this.valor = valor;
+        Nodo(int dato) {
+            this.dato = dato;
         }
     }
 
+    // Referencias principales
     Nodo cabeza = null;
     Nodo cola = null;
 
-    // Método para insertar un número al final de la lista
+    // Insertar al final
     public void insertar(int valor) {
         Nodo nuevo = new Nodo(valor);
         if (cabeza == null) {
@@ -26,19 +27,40 @@ public class ListaDobleNumeros {
             nuevo.anterior = cola;
             cola = nuevo;
         }
-        System.out.println("Se inserto el numero: " + valor);
     }
 
-    // Método para eliminar un número de la lista
+    // Insertar antes de un nodo con valor específico
+    public void insertarAntesDe(int valorReferencia, int nuevoValor) {
+        Nodo actual = cabeza;
+        while (actual != null && actual.dato != valorReferencia) {
+            actual = actual.siguiente;
+        }
+
+        if (actual != null) {
+            Nodo nuevo = new Nodo(nuevoValor);
+            nuevo.siguiente = actual;
+            nuevo.anterior = actual.anterior;
+
+            if (actual.anterior != null) {
+                actual.anterior.siguiente = nuevo;
+            } else {
+                cabeza = nuevo; // insertar al inicio
+            }
+            actual.anterior = nuevo;
+        } else {
+            System.out.println("Valor " + valorReferencia + " no encontrado en la lista.");
+        }
+    }
+
+    // Eliminar un nodo con un valor dado
     public void eliminar(int valor) {
         Nodo actual = cabeza;
-
-        while (actual != null && actual.valor != valor) {
+        while (actual != null && actual.dato != valor) {
             actual = actual.siguiente;
         }
 
         if (actual == null) {
-            System.out.println("El numero " + valor + " no se encuentra en la lista.");
+            System.out.println("Nodo con valor " + valor + " no encontrado.");
             return;
         }
 
@@ -53,27 +75,25 @@ public class ListaDobleNumeros {
         } else {
             cola = actual.anterior;
         }
-
-        System.out.println("Se elimino el numero: " + valor);
     }
 
-    // Método para recorrer la lista de inicio a fin
-    public void recorrerAdelante() {
+    // Mostrar lista de inicio a fin
+    public void mostrar() {
         Nodo actual = cabeza;
-        System.out.print("Recorrido de inicio a fin: ");
+        System.out.print("Lista: ");
         while (actual != null) {
-            System.out.print("[" + actual.valor + "] ");
+            System.out.print("[" + actual.dato + "] ");
             actual = actual.siguiente;
         }
         System.out.println();
     }
 
-    // Método para recorrer la lista en sentido inverso
-    public void recorrerAtras() {
+    // Recorrer la lista en reversa
+    public void recorrerReversa() {
         Nodo actual = cola;
-        System.out.print("Recorrido de fin a inicio: ");
+        System.out.print("Lista en reversa: ");
         while (actual != null) {
-            System.out.print("[" + actual.valor + "] ");
+            System.out.print("[" + actual.dato + "] ");
             actual = actual.anterior;
         }
         System.out.println();
@@ -83,23 +103,28 @@ public class ListaDobleNumeros {
     public static void main(String[] args) {
         ListaDobleNumeros lista = new ListaDobleNumeros();
 
-        // Inserciones iniciales
-        lista.insertar(5);
+        // Crear lista inicial [3] ⇔ [7] ⇔ [9] ⇔ [12] ⇔ [15]
+        lista.insertar(3);
+        lista.insertar(7);
+        lista.insertar(9);
+        lista.insertar(12);
         lista.insertar(15);
-        lista.insertar(25);
-        lista.insertar(35);
 
-        // Mostrar lista
-        System.out.println("\nLista actual:");
-        lista.recorrerAdelante();
+        System.out.println("Lista inicial:");
+        lista.mostrar();
 
-        // Eliminar un número
-        System.out.println("\nEliminando el número 15...");
-        lista.eliminar(15);
-        lista.recorrerAdelante();
+        // Insertar 10 antes de 12
+        System.out.println("\nInsertando 10 antes de 12...");
+        lista.insertarAntesDe(12, 10);
+        lista.mostrar();
 
-        // Recorrer en sentido inverso
-        System.out.println("\nRecorrido inverso:");
-        lista.recorrerAtras();
+        // Eliminar nodo con valor 7
+        System.out.println("\nEliminando nodo con valor 7...");
+        lista.eliminar(7);
+        lista.mostrar();
+
+        // Mostrar lista en reversa
+        System.out.println("\nRecorriendo lista en reversa:");
+        lista.recorrerReversa();
     }
 }
